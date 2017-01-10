@@ -8,12 +8,18 @@ class App extends Component {
   constructor() {
     super();
     this.state ={
-      grudges: []
+      grudges: [],
+      offenders: [],
+      selectedOffender: null
     };
   }
 
   componentDidMount() {
     this.loadGrudges();
+  }
+
+  persistGrudges() {
+    console.log('saving grudges somewhere locally', this.state.grudges);
   }
 
   loadGrudges() {
@@ -24,6 +30,7 @@ class App extends Component {
     console.log('updating foriven', e);
   }
 
+
   createGrudge(e) {
     const {Offender, Offense} = e.target;
     const grudge = {
@@ -32,17 +39,35 @@ class App extends Component {
       offense: Offense.value,
       forgiven: false
     };
-
     this.setState({ grudges: this.state.grudges.concat(grudge)});
+    this.persistGrudges();
+    this.updateOffenders(grudge);
+  }
+
+  updateOffenders(grudge) {
+    const offenders = this.state.offenders;
+    let offender = grudge.offender;
+    if (!offenders.includes(offender)) {
+      let newOffendersArray = this.state.offenders.concat(offender).sort();
+      this.setState({ offenders: newOffendersArray });      
+    }
   }
 
   render() {
-    const {grudges} = this.state;
+    const {grudges, offenders} = this.state;
+    
     return (
       <section className='App'>
         <h1>Welcome to the Grudge Bin</h1>
         <section className='GrudgeFormContainer'>
           <GrudgeForm createGrudge={(e) => this.createGrudge(e)} />
+        </section>
+        <section>
+          <ul>
+            {offenders && 
+              offenders.map((offender, index) => <li key={index}>Offenders!!!  {offender}</li>)  
+            }
+          </ul>
         </section>
         <section className='Grudges'>
           { grudges &&
