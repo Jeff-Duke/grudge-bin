@@ -18,9 +18,26 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.loadGrudges();
+    this.loadGrudgesFromStorage();
+  }
+  
+  updateOffenders(newGrudgesArray) {
+    let newOffendersArray = [];
+    newGrudgesArray.map((grudge) => {
+      if(!newOffendersArray.includes(grudge.offender)) {
+        newOffendersArray.push(grudge.offender);
+      }
+    });
+   this.setState({ offenders: newOffendersArray});
   }
 
+  loadGrudgesFromStorage() {
+    idbKeyval.get('grudges')
+      .then(val => this.setState({ grudges: val }))
+      .then(() => this.updateOffenders(this.state.grudges))
+      .then(() => console.log('grudges loaded'))
+      .catch(err => console.log('An error occurred: ', err));
+  }
 
   persistGrudges(newGrudgesArray) {
     idbKeyval.set('grudges', newGrudgesArray)
@@ -28,29 +45,9 @@ class App extends Component {
       .catch(err => console.log('it failed!', err));
   }
 
-  loadOffenders() {
-    const { grudges } = this.state;
-    const newOffendersArray = [];
-    grudges.map((grudge) => { return newOffendersArray.push(grudge.offender); });
-    this.setState({ offenders: newOffendersArray });
-  }
-
-  loadGrudges() {
-    idbKeyval.get('grudges')
-      .then(val => this.setState({ grudges: val }))
-      .then(() => this.loadOffenders())
-      .then(() => console.log('grudges loaded'))
-      .catch(err => console.log('An error occurred: ', err));
-  }
-
-  updateGrudges(grudge) {
-    const newGrudgesArray = this.state.grudges.concat(grudge);
-    this.setState({ grudges: newGrudgesArray});
-    this.persistGrudges(newGrudgesArray);
-  }
-
-  updateForgiven(e) {
-    console.log('updating foriven', e);
+  updateForgiven(updatedGrudge) {
+    debugger;
+    console.log('updating foriven', updatedGrudge);
   }
 
   createGrudge(e) {
@@ -61,18 +58,20 @@ class App extends Component {
       offense: Offense.value,
       forgiven: false
     };
-    this.updateGrudges(grudge);
-    this.updateOffenders(grudge);
+    const newGrudgesArray = this.state.grudges.concat(grudge);
+    this.setState({ grudges: newGrudgesArray});
+    this.persistGrudges(newGrudgesArray);
+    this.updateOffenders(newGrudgesArray);
   }
 
-  updateOffenders(grudge) {
-    const offenders = this.state.offenders;
-    let offender = grudge.offender;
-    if (!offenders.includes(offender)) {
-      let newOffendersArray = this.state.offenders.concat(offender).sort();
-      this.setState({ offenders: newOffendersArray });      
-    }
+  deleteGrudge(grudgeToDelete) {
+    const newGrudgesArray = this.state.grudges.filter(grudge => grudge !== grudgeToDelete);
+    this.setState({ grudges: newGrudgesArray});
+    this.persistGrudges(newGrudgesArray);
+    this.updateOffenders(newGrudgesArray);
   }
+
+  
 
   render() {
     const {grudges, offenders} = this.state;
@@ -96,6 +95,7 @@ class App extends Component {
               key={grudge.key}
               grudge={grudge}
               updateForgiven={(e) => this.updateForgiven(e)}
+              deleteGrudge={(grudge) => this.deleteGrudge(grudge)}
             />)
           }
         </section>
