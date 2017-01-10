@@ -10,8 +10,8 @@ const Grudge = ({grudge, updateForgiven, deleteGrudge}) => {
       <input
         type='checkbox'
         name='forgiven'
-        value={forgiven}
-        onClick={(e) => {
+        defaultChecked={forgiven}
+        onClick={() => {
         updateForgiven(grudge)
       }}/>
       <button

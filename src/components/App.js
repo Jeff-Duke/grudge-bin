@@ -24,9 +24,8 @@ class App extends Component {
   updateOffenders(newGrudgesArray) {
     let newOffendersArray = [];
     newGrudgesArray.map((grudge) => {
-      if(!newOffendersArray.includes(grudge.offender)) {
-        newOffendersArray.push(grudge.offender);
-      }
+      return (!newOffendersArray.includes(grudge.offender) &&
+        newOffendersArray.push(grudge.offender));
     });
    this.setState({ offenders: newOffendersArray});
   }
@@ -46,8 +45,18 @@ class App extends Component {
   }
 
   updateForgiven(updatedGrudge) {
-    debugger;
-    console.log('updating foriven', updatedGrudge);
+    let grudges = this.state.grudges;
+    let newGrudgesArray = grudges.map((grudge) => {
+      if(grudge.key === updatedGrudge.key) {
+        grudge.forgiven = !grudge.forgiven;
+        return grudge;
+      }
+      else {
+        return grudge;
+      }
+    });
+    this.setState({ grudges: newGrudgesArray });
+    this.persistGrudges(newGrudgesArray);
   }
 
   createGrudge(e) {
@@ -94,7 +103,7 @@ class App extends Component {
             grudges.map(grudge => <Grudge
               key={grudge.key}
               grudge={grudge}
-              updateForgiven={(e) => this.updateForgiven(e)}
+              updateForgiven={(grudge) => this.updateForgiven(grudge)}
               deleteGrudge={(grudge) => this.deleteGrudge(grudge)}
             />)
           }
