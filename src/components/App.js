@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+import idbKeyval from 'idb-keyval';
+
 import '../styles/css/App.css';
+
 
 import GrudgeForm from './GrudgeForm';
 import Grudge from './Grudge';
@@ -18,18 +21,37 @@ class App extends Component {
     this.loadGrudges();
   }
 
-  persistGrudges() {
-    console.log('saving grudges somewhere locally', this.state.grudges);
+
+  persistGrudges(newGrudgesArray) {
+    idbKeyval.set('grudges', newGrudgesArray)
+      .then(() => console.log('grudges set'))
+      .catch(err => console.log('it failed!', err));
+  }
+
+  loadOffenders() {
+    const { grudges } = this.state;
+    const newOffendersArray = [];
+    grudges.map((grudge) => { return newOffendersArray.push(grudge.offender); });
+    this.setState({ offenders: newOffendersArray });
   }
 
   loadGrudges() {
-    console.log('loading some grudges', this.state.grudges);
+    idbKeyval.get('grudges')
+      .then(val => this.setState({ grudges: val }))
+      .then(() => this.loadOffenders())
+      .then(() => console.log('grudges loaded'))
+      .catch(err => console.log('An error occurred: ', err));
+  }
+
+  updateGrudges(grudge) {
+    const newGrudgesArray = this.state.grudges.concat(grudge);
+    this.setState({ grudges: newGrudgesArray});
+    this.persistGrudges(newGrudgesArray);
   }
 
   updateForgiven(e) {
     console.log('updating foriven', e);
   }
-
 
   createGrudge(e) {
     const {Offender, Offense} = e.target;
@@ -39,8 +61,7 @@ class App extends Component {
       offense: Offense.value,
       forgiven: false
     };
-    this.setState({ grudges: this.state.grudges.concat(grudge)});
-    this.persistGrudges();
+    this.updateGrudges(grudge);
     this.updateOffenders(grudge);
   }
 
