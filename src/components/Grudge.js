@@ -1,13 +1,13 @@
 import React from 'react';
 
-const Grudge = (grudge, updateForgiven) => {
-  const { title, offender, notes, forgiven } = grudge;
+const Grudge = ({grudge, updateForgiven}) => {
+  const { offender, offense, forgiven, key } = grudge;
   return (
-    <article className='grudge'>
-      <p>{title}</p>
-      <p>{offender}</p>
-      <p>{notes}</p>
-      <input 
+    <article className='grudge' key={key}>
+      <h3>{offender}</h3>
+      <p>{offense}</p>
+      <label htmlFor='forgiven'>Forgiven</label>
+      <input
         type='checkbox' 
         name='forgiven' 
         value={forgiven}
