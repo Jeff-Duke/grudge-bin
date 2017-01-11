@@ -2,7 +2,7 @@ import React from 'react';
 
 const OffenderList = ({ offenders, updateOffender, grudgesToShow }) => {
   return (
-    <section>
+    <section className='OffenderList'>
       <h2> Those dastardly dogs what wronged you: </h2>
       <h4> Select a curr from the list to see what wongdoings they have done to ye</h4>
           <ul>

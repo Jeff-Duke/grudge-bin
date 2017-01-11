@@ -79,10 +79,7 @@ class App extends Component {
   }
 
   deleteGrudge(grudgeToDelete) {
-    const newGrudgesArray = this
-      .state
-      .grudges
-      .filter(grudge => grudge !== grudgeToDelete);
+    const newGrudgesArray = this.state.grudges.filter(grudge => grudge !== grudgeToDelete);
     this.setState({grudges: newGrudgesArray});
     this.persistGrudges(newGrudgesArray);
     this.updateOffenders(newGrudgesArray);
@@ -90,10 +87,7 @@ class App extends Component {
 
   countForgiven() {
     let count = 0;
-    this
-      .state
-      .grudges
-      .map((grudge) => {
+    this.state.grudges.map((grudge) => {
         return grudge.forgiven === true && count++;
       });
     return count;
@@ -101,7 +95,8 @@ class App extends Component {
 
   render() {
     const {grudges, offenders, selectedOffender} = this.state;
-    let grudgesToShow = grudges.filter(grudge => grudge.offender === selectedOffender);
+    let grudgesToShow;
+    grudges && grudges.filter(grudge => grudge.offender === selectedOffender);
 
     let totalOffenders = offenders.length;
     let totalGrudges = grudges.length;
