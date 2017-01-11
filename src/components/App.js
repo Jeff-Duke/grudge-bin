@@ -25,7 +25,7 @@ class App extends Component {
 
   updateOffenders(newGrudgesArray) {
     let newOffendersArray = [];
-    newGrudgesArray.map((grudge) => {
+    newGrudgesArray && newGrudgesArray.map((grudge) => {
       return (!newOffendersArray.includes(grudge.offender) && newOffendersArray.push(grudge.offender));
     });
     this.setState({offenders: newOffendersArray});
@@ -96,11 +96,16 @@ class App extends Component {
   render() {
     const {grudges, offenders, selectedOffender} = this.state;
     let grudgesToShow;
-    grudges && grudges.filter(grudge => grudge.offender === selectedOffender);
+    if (grudges) { grudgesToShow = grudges.filter(grudge => grudge.offender === selectedOffender); }
 
-    let totalOffenders = offenders.length;
-    let totalGrudges = grudges.length;
+
+    let totalOffenders; 
+    if(offenders) {totalOffenders = offenders.length;}
+    let totalGrudges;
+    if(grudges) { totalGrudges = grudges.length;}
+    
     let forgivenCount = this.countForgiven();
+    
     let unforgivenCount = totalGrudges - forgivenCount;
 
     return (
