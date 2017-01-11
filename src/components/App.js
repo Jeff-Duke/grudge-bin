@@ -6,6 +6,7 @@ import '../styles/css/App.css';
 
 import GrudgeForm from './GrudgeForm';
 import Grudge from './Grudge';
+import OffenderList from './OffenderList';
 
 class App extends Component {
   constructor() {
@@ -80,10 +81,9 @@ class App extends Component {
     this.updateOffenders(newGrudgesArray);
   }
 
-  
-
   render() {
-    const {grudges, offenders} = this.state;
+    const {grudges, offenders, selectedOffender} = this.state;
+    let grudgesToShow = grudges.filter(grudge => grudge.offender === selectedOffender);
     
     return (
       <section className='App'>
@@ -91,16 +91,18 @@ class App extends Component {
         <section className='GrudgeFormContainer'>
           <GrudgeForm createGrudge={(e) => this.createGrudge(e)} />
         </section>
-        <section>
-          <ul>
-            {offenders && 
-              offenders.map((offender, index) => <li key={index}>Offenders!!!  {offender}</li>)  
-            }
-          </ul>
+        
+        <section className='OffenderListContainer'>
+          <OffenderList
+            offenders={offenders}
+            updateOffender={(offender) => {this.setState({ selectedOffender: offender })}}
+            grudgesToShow={grudgesToShow}
+          />
         </section>
+
         <section className='Grudges'>
-          { grudges &&
-            grudges.map(grudge => <Grudge
+          { grudgesToShow &&
+            grudgesToShow.map(grudge => <Grudge
               key={grudge.key}
               grudge={grudge}
               updateForgiven={(grudge) => this.updateForgiven(grudge)}

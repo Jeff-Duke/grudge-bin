@@ -6,7 +6,6 @@ import '../src/styles/css/index.css';
 
 import App from '../src/components/App';
 
-
 const Root = () => {
   return (
     <BrowserRouter>
