@@ -69,10 +69,8 @@ class App extends Component {
       offense: Offense.value,
       forgiven: false
     };
-    const newGrudgesArray = this
-      .state
-      .grudges
-      .concat(grudge);
+    const grudges = this.state.grudges || [];
+    const newGrudgesArray = grudges.concat(grudge);
     this.setState({grudges: newGrudgesArray});
     this.persistGrudges(newGrudgesArray);
     this.updateOffenders(newGrudgesArray);
@@ -87,7 +85,8 @@ class App extends Component {
 
   countForgiven() {
     let count = 0;
-    this.state.grudges.map((grudge) => {
+    const grudges = this.state.grudges || [];
+    grudges.map((grudge) => {
         return grudge.forgiven === true && count++;
       });
     return count;

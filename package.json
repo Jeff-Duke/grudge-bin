@@ -19,7 +19,6 @@
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
     "deploy": "npm run build&&gh-pages -d build",
-    "surgeDeploy": "npm run build && mv build/index.html build/200.html && surge build grudge-bin.surge.sh"
-  },
-  "homepage": "https://jeff-duke.github.io/grudge-bin/"
+    "surgeDeploy": "npm run build && mv build/index.html build/200.html && surge"
+  }
 }
