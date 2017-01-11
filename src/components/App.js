@@ -1,46 +1,48 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import idbKeyval from 'idb-keyval';
 
 import '../styles/css/App.css';
 
-
 import GrudgeForm from './GrudgeForm';
 import Grudge from './Grudge';
 import OffenderList from './OffenderList';
+import Counts from './Counts';
 
 class App extends Component {
   constructor() {
     super();
-    this.state ={
+    this.state = {
       grudges: [],
       offenders: [],
-      selectedOffender: null
+      selectedOffender: null,
+      forgivenCount: null
     };
   }
 
   componentDidMount() {
     this.loadGrudgesFromStorage();
   }
-  
+
   updateOffenders(newGrudgesArray) {
     let newOffendersArray = [];
     newGrudgesArray.map((grudge) => {
-      return (!newOffendersArray.includes(grudge.offender) &&
-        newOffendersArray.push(grudge.offender));
+      return (!newOffendersArray.includes(grudge.offender) && newOffendersArray.push(grudge.offender));
     });
-   this.setState({ offenders: newOffendersArray});
+    this.setState({offenders: newOffendersArray});
   }
 
   loadGrudgesFromStorage() {
-    idbKeyval.get('grudges')
-      .then(val => this.setState({ grudges: val }))
+    idbKeyval
+      .get('grudges')
+      .then(val => this.setState({grudges: val}))
       .then(() => this.updateOffenders(this.state.grudges))
       .then(() => console.log('grudges loaded'))
       .catch(err => console.log('An error occurred: ', err));
   }
 
   persistGrudges(newGrudgesArray) {
-    idbKeyval.set('grudges', newGrudgesArray)
+    idbKeyval
+      .set('grudges', newGrudgesArray)
       .then(() => console.log('grudges set'))
       .catch(err => console.log('it failed!', err));
   }
@@ -48,15 +50,14 @@ class App extends Component {
   updateForgiven(updatedGrudge) {
     let grudges = this.state.grudges;
     let newGrudgesArray = grudges.map((grudge) => {
-      if(grudge.key === updatedGrudge.key) {
+      if (grudge.key === updatedGrudge.key) {
         grudge.forgiven = !grudge.forgiven;
         return grudge;
-      }
-      else {
+      } else {
         return grudge;
       }
     });
-    this.setState({ grudges: newGrudgesArray });
+    this.setState({grudges: newGrudgesArray});
     this.persistGrudges(newGrudgesArray);
   }
 
@@ -68,47 +69,68 @@ class App extends Component {
       offense: Offense.value,
       forgiven: false
     };
-    const newGrudgesArray = this.state.grudges.concat(grudge);
-    this.setState({ grudges: newGrudgesArray});
+    const newGrudgesArray = this
+      .state
+      .grudges
+      .concat(grudge);
+    this.setState({grudges: newGrudgesArray});
     this.persistGrudges(newGrudgesArray);
     this.updateOffenders(newGrudgesArray);
   }
 
   deleteGrudge(grudgeToDelete) {
-    const newGrudgesArray = this.state.grudges.filter(grudge => grudge !== grudgeToDelete);
-    this.setState({ grudges: newGrudgesArray});
+    const newGrudgesArray = this
+      .state
+      .grudges
+      .filter(grudge => grudge !== grudgeToDelete);
+    this.setState({grudges: newGrudgesArray});
     this.persistGrudges(newGrudgesArray);
     this.updateOffenders(newGrudgesArray);
+  }
+
+  countForgiven() {
+    let count = 0;
+    this
+      .state
+      .grudges
+      .map((grudge) => {
+        return grudge.forgiven === true && count++;
+      });
+    return count;
   }
 
   render() {
     const {grudges, offenders, selectedOffender} = this.state;
     let grudgesToShow = grudges.filter(grudge => grudge.offender === selectedOffender);
-    
+
+    let totalOffenders = offenders.length;
+    let totalGrudges = grudges.length;
+    let forgivenCount = this.countForgiven();
+    let unforgivenCount = totalGrudges - forgivenCount;
+
     return (
       <section className='App'>
         <h1>Welcome to the Grudge Bin</h1>
-        <section className='GrudgeFormContainer'>
-          <GrudgeForm createGrudge={(e) => this.createGrudge(e)} />
-        </section>
-        
-        <section className='OffenderListContainer'>
-          <OffenderList
-            offenders={offenders}
-            updateOffender={(offender) => {this.setState({ selectedOffender: offender })}}
-            grudgesToShow={grudgesToShow}
-          />
-        </section>
+        <Counts
+          totalOffenders={totalOffenders}
+          totalGrudges={totalGrudges}
+          forgivenCount={forgivenCount}
+          unforgivenCount={unforgivenCount}/>
+        <GrudgeForm createGrudge={(e) => this.createGrudge(e)}/>
+        <OffenderList
+          offenders={offenders}
+          updateOffender={(offender) => {
+          this.setState({selectedOffender: offender})
+        }}
+          grudgesToShow={grudgesToShow}/>
 
         <section className='Grudges'>
-          { grudgesToShow &&
-            grudgesToShow.map(grudge => <Grudge
-              key={grudge.key}
-              grudge={grudge}
-              updateForgiven={(grudge) => this.updateForgiven(grudge)}
-              deleteGrudge={(grudge) => this.deleteGrudge(grudge)}
-            />)
-          }
+          {grudgesToShow && grudgesToShow.map(grudge => <Grudge
+            key={grudge.key}
+            grudge={grudge}
+            updateForgiven={(grudge) => this.updateForgiven(grudge)}
+            deleteGrudge={(grudge) => this.deleteGrudge(grudge)}/>)
+}
         </section>
       </section>
     );
