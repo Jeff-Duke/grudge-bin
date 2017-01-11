@@ -1,9 +1,67 @@
 body {
-  margin: 0;
-  padding: 0;
   font-family: sans-serif;
-}
+  background-color: #263248;
+  color: white; }
+
+h1 {
+  font-size: 2em;
+  color: #FF9800; }
+
+.App {
+  text-align: center; }
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px; }
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white; }
+
+.App-intro {
+  font-size: large; }
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg); }
+  to {
+    transform: rotate(360deg); } }
+li {
+  list-style-type: none; }
+
+.Counts {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 25px; }
+  .Counts p {
+    padding: 25px; }
+
+.Count {
+  padding-left: 8px;
+  color: #FF9800; }
+
+.GrudgeForm {
+  padding: 25px; }
+  .GrudgeForm input {
+    margin: 15px; }
+
+h2 {
+  color: #7E8AA2; }
+
+h4 {
+  color: #FF9800; }
+
+.OffenderList {
+  border: 2px solid #7E8AA2;
+  width: 80vw;
+  margin: auto; }
 
 li {
-  list-style-type: none;
-}
+  font-size: 1.4em;
+  color: yellow; }
+
+/*# sourceMappingURL=index.css.map */

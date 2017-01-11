@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,EAAG;EACD,KAAK,EAAE,OAAO;;AAGhB,EAAG;EACD,KAAK,EAAE,OAAO;;AAGhB,aAAc;EACZ,MAAM,EAAE,iBAAiB;EACzB,KAAK,EAAE,IAAI;EACX,MAAM,EAAE,IAAI;;AAGd,EAAG;EACD,SAAS,EAAE,KAAK;EAChB,KAAK,EAAE,MAAM",
+"sources": ["../scss/OffenderList.scss"],
+"names": [],
+"file": "OffenderList.css"
+}
