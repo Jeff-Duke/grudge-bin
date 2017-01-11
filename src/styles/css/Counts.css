@@ -1,0 +1,17 @@
+li {
+  list-style-type: none; }
+
+.Counts {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 25px; }
+  .Counts p {
+    padding: 25px; }
+
+.Count {
+  padding-left: 8px;
+  color: #FF9800; }
+
+/*# sourceMappingURL=Counts.css.map */
