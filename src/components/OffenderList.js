@@ -10,7 +10,6 @@ const OffenderList = ({ offenders, updateOffender, grudgesToShow }) => {
             {offenders && 
               offenders.map((offender, index) => 
               <li
-              to={`${offender}`}
               key={index}
               onClick={() => updateOffender(offender)}
               >{offender}
